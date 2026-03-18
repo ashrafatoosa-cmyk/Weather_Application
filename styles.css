@@ -56,8 +56,8 @@ body {
     left: 0;
     width: 100%;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(2px);
+    background: linear-gradient(135deg, rgba(81, 45, 168, 0.6), rgba(194, 24, 91, 0.6));
+    backdrop-filter: blur(3px);
     z-index: -1;
 }
 
@@ -95,29 +95,16 @@ body {
 
 .logo-icon {
     font-size: 2.5rem;
-    background: linear-gradient(45deg, #ff00cc, #3333ff, #00d2ff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    animation: hueRotate 5s linear infinite;
-}
-
-@keyframes hueRotate {
-    from { filter: hue-rotate(0deg); }
-    to { filter: hue-rotate(360deg); }
+    color: #ff4081;
+    text-shadow: 0 0 20px rgba(255, 64, 129, 0.6);
 }
 
 .app-title {
     font-weight: 900;
     font-size: 3.5rem;
-    background: linear-gradient(to right, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
+    color: #fff;
     letter-spacing: 3px;
-    text-shadow: 0 10px 30px rgba(255,255,255,0.2);
+    text-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
 /* Glassmorphism Classes */
@@ -187,7 +174,7 @@ body {
 }
 
 .custom-select option {
-    background: #2c3e50;
+    background: #4a148c;
     color: #fff;
 }
 .suggestions-list {
