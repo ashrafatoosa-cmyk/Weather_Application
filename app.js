@@ -1,11 +1,20 @@
-// Open-Meteo APIs (No API key required)
+// Open-Meteo APIs (No API key required) and Countries API
 const GEOCODING_API = 'https://geocoding-api.open-meteo.com/v1/search';
 const WEATHER_API = 'https://api.open-meteo.com/v1/forecast';
+const COUNTRIES_API = 'https://countriesnow.space/api/v0.1/countries';
+
+// Background Slider Images
+const bgImages = [
+    'https://images.unsplash.com/photo-1504608524841-42ce6c20a016?q=80&w=2070&auto=format&fit=crop', // Lightning
+    'https://images.unsplash.com/photo-1464617260814-2fc5f75e2f5b?q=80&w=2070&auto=format&fit=crop', // Sun/clouds
+    'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?q=80&w=2070&auto=format&fit=crop', // Rain
+    'https://images.unsplash.com/photo-1478719059408-592965bf249b?q=80&w=2070&auto=format&fit=crop', // Snow
+    'https://images.unsplash.com/photo-1423209086112-be2e4afcebf1?q=80&w=2102&auto=format&fit=crop'  // Fog
+];
 
 // DOM Elements
-const countryInput = document.getElementById('country-search');
-const cityInput = document.getElementById('city-search');
-const suggestionsList = document.getElementById('search-results');
+const countrySelect = document.getElementById('country-select');
+const citySelect = document.getElementById('city-select');
 const weatherCard = document.getElementById('weather-card');
 const loadingSpinner = document.getElementById('loading');
 const errorMessage = document.getElementById('error-message');
@@ -21,105 +30,103 @@ const humidityEl = document.getElementById('humidity');
 const feelsLikeEl = document.getElementById('feels-like');
 const weatherIconEl = document.getElementById('weather-icon');
 
-// Debounce helper
-let debounceTimer;
-const debounce = (callback, time) => {
-    window.clearTimeout(debounceTimer);
-    debounceTimer = window.setTimeout(callback, time);
-};
+let countriesData = [];
 
-// Handle Input Changes
-function handleSearchInput() {
-    const country = countryInput.value.trim();
-    const city = cityInput.value.trim();
-
-    let query = '';
-    if (city.length > 0 && country.length > 0) {
-        query = `${city}, ${country}`;
-    } else if (city.length > 0) {
-        query = city;
-    } else if (country.length > 0) {
-        query = country;
+// Fetch Countries on load
+async function fetchCountries() {
+    try {
+        const response = await fetch(COUNTRIES_API);
+        const data = await response.json();
+        
+        if (!data.error) {
+            countriesData = data.data;
+            // Sort alphabetically naturally
+            countriesData.sort((a,b) => a.country.localeCompare(b.country));
+            
+            countriesData.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.country;
+                option.textContent = item.country;
+                countrySelect.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error("Failed to load countries:", error);
     }
-
-    if (query.length < 2) {
-        suggestionsList.classList.add('hidden');
-        return;
-    }
-
-    debounce(() => fetchSuggestions(query, country), 400);
 }
 
-countryInput.addEventListener('input', handleSearchInput);
-cityInput.addEventListener('input', handleSearchInput);
-
-// Hide suggestions when clicking outside
-document.addEventListener('click', (e) => {
-    if (!countryInput.contains(e.target) && !cityInput.contains(e.target) && !suggestionsList.contains(e.target)) {
-        suggestionsList.classList.add('hidden');
+// Setup Event Listeners
+countrySelect.addEventListener('change', (e) => {
+    const selectedCountry = e.target.value;
+    citySelect.innerHTML = '<option value="">Select City</option>'; // reset
+    citySelect.disabled = true;
+    
+    if (selectedCountry) {
+        const countryInfo = countriesData.find(c => c.country === selectedCountry);
+        if (countryInfo && countryInfo.cities.length > 0) {
+            // Sort cities alphabetically
+            const cities = countryInfo.cities.sort();
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+            citySelect.disabled = false;
+        }
     }
 });
 
-// Fetch City Suggestions
-async function fetchSuggestions(query, countryFilter) {
-    try {
-        const response = await fetch(`${GEOCODING_API}?name=${encodeURIComponent(query)}&count=10&language=en&format=json`);
-        const data = await response.json();
-
-        if (data.results && data.results.length > 0) {
-            let filteredResults = data.results;
-
-            if (countryFilter && countryFilter.length >= 2) {
-                const lowerCountry = countryFilter.toLowerCase();
-                const exactMatches = filteredResults.filter(city => city.country && city.country.toLowerCase().includes(lowerCountry));
-                if (exactMatches.length > 0) {
-                    filteredResults = exactMatches;
-                }
+citySelect.addEventListener('change', async (e) => {
+    const selectedCity = e.target.value;
+    const selectedCountry = countrySelect.value;
+    
+    if (selectedCity && selectedCountry) {
+        // Find coordinates with Geocoding API
+        try {
+            loadingSpinner.classList.remove('hidden');
+            weatherCard.classList.add('hidden');
+            hideError();
+            
+            const query = `${selectedCity}, ${selectedCountry}`;
+            const response = await fetch(`${GEOCODING_API}?name=${encodeURIComponent(query)}&count=1&language=en&format=json`);
+            const data = await response.json();
+            
+            if (data.results && data.results.length > 0) {
+                const location = data.results[0];
+                fetchWeather(location.latitude, location.longitude, location.name, location.country);
+            } else {
+                showError("Location not found visually. Try another city.");
+                loadingSpinner.classList.add('hidden');
             }
-
-            displaySuggestions(filteredResults.slice(0, 5));
-        } else {
-            suggestionsList.classList.add('hidden');
+        } catch (err) {
+            showError("Error finding location coordinates.");
+            loadingSpinner.classList.add('hidden');
         }
-    } catch (error) {
-        console.error("Geocoding API error:", error);
     }
-}
+});
 
-// Display Suggestions
-function displaySuggestions(results) {
-    suggestionsList.innerHTML = '';
-
-    results.forEach(city => {
-        const li = document.createElement('li');
-
-        let flag = '';
-        if (city.country_code) {
-            flag = city.country_code.toUpperCase().replace(/./g, char => String.fromCodePoint(char.charCodeAt(0) + 127397));
-        }
-
-        const stateInfo = city.admin1 ? `, ${city.admin1}` : '';
-
-        li.innerHTML = `
-            <span class="country-flag">${flag}</span>
-            <div class="suggestion-details">
-                <div class="suggestion-city">${city.name}${stateInfo}</div>
-                <div class="suggestion-country">${city.country}</div>
-            </div>
-        `;
-
-        li.addEventListener('click', () => {
-            countryInput.value = city.country;
-            cityInput.value = city.name;
-            suggestionsList.classList.add('hidden');
-            fetchWeather(city.latitude, city.longitude, city.name, city.country);
-        });
-
-        suggestionsList.appendChild(li);
+// Initialize slider logic
+function initSlider() {
+    const sliderContainer = document.getElementById('bg-slider');
+    if (!sliderContainer) return;
+    
+    bgImages.forEach((img, index) => {
+        const slide = document.createElement('div');
+        slide.className = `slide ${index === 0 ? 'active' : ''}`;
+        slide.style.backgroundImage = `url('${img}')`;
+        sliderContainer.appendChild(slide);
     });
 
-    suggestionsList.className = 'suggestions-list glass';
-    suggestionsList.classList.remove('hidden');
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    if (slides.length > 0) {
+        setInterval(() => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }, 6000); // 6 seconds per slide
+    }
 }
 
 // Fetch Weather Data
@@ -220,6 +227,7 @@ function hideError() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Hidden initially
+    initSlider();
+    fetchCountries();
     weatherCard.classList.add('hidden');
 });
