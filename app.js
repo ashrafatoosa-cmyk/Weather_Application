@@ -208,7 +208,7 @@ function createParticles(type) {
         const particle = document.createElement('div');
         particle.className = `particle ${type === 'rain' ? 'rain-drop' : 'leaf'}`;
         particle.style.left = Math.random() * 100 + 'vw';
-        particle.style.animationDuration = (Math.random() * 2 + (type === 'rain' ? 0.5 : 3)) + 's';
+        particle.style.animationDuration = (Math.random() * 2 + (type === 'rain' ? 0.4 : 3)) + 's';
         particle.style.opacity = Math.random();
         
         container.appendChild(particle);
@@ -217,7 +217,7 @@ function createParticles(type) {
         setTimeout(() => {
             particle.remove();
         }, 6000);
-    }, type === 'rain' ? 50 : 300);
+    }, type === 'rain' ? 30 : 250);
 }
 
 // Update DOM

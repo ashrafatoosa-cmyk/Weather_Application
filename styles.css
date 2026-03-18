@@ -142,6 +142,19 @@ body {
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.search-box::after {
+    content: '\f0d7';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 20px;
+    color: #fff;
+    pointer-events: none;
+    font-size: 0.8rem;
 }
 
 .search-box:focus-within {
@@ -167,7 +180,10 @@ body {
     font-weight: 700;
     width: 100%;
     cursor: pointer;
-    padding-right: 5px;
+    padding-right: 25px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 .custom-select:disabled {
@@ -448,9 +464,10 @@ body {
 
 .rain-drop {
     width: 2px;
-    height: 15px;
-    background: rgba(255, 255, 255, 0.4);
-    animation: rainFall 1s linear infinite;
+    height: 25px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(179, 229, 252, 0.8));
+    animation: rainFall 0.8s linear infinite;
+    filter: drop-shadow(0 0 5px rgba(255,255,255,0.4));
 }
 
 @keyframes rainFall {
