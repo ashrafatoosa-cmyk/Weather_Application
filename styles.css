@@ -101,9 +101,9 @@ body {
 
 .app-title {
     font-weight: 900;
-    font-size: 3.5rem;
+    font-size: 2.8rem;
     color: #fff;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     text-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
@@ -256,7 +256,7 @@ body {
 }
 
 #location-name {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     font-weight: 800;
     margin-bottom: 0.5rem;
     text-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -418,3 +418,50 @@ body {
 .suggestions-list::-webkit-scrollbar-thumb:hover {
     background: rgba(0,0,0,0.25);
 }
+
+/* Particle Effects */
+#particles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.rain-drop {
+    width: 2px;
+    height: 15px;
+    background: rgba(255, 255, 255, 0.4);
+    animation: rainFall 1s linear infinite;
+}
+
+@keyframes rainFall {
+    to { transform: translateY(100vh); }
+}
+
+.leaf {
+    width: 15px;
+    height: 15px;
+    background: rgba(255, 120, 0, 0.6);
+    border-radius: 2px 10px;
+    animation: leafFall 5s linear infinite;
+}
+
+@keyframes leafFall {
+    0% { transform: translate(0, -10vh) rotate(0deg); }
+    25% { transform: translate(100px, 25vh) rotate(90deg); }
+    50% { transform: translate(-50px, 50vh) rotate(180deg); }
+    75% { transform: translate(100px, 75vh) rotate(270deg); }
+    100% { transform: translate(0, 100vh) rotate(360deg); }
+}
+

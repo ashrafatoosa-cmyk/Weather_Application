@@ -156,60 +156,95 @@ async function fetchWeather(lat, lon, cityName, countryName) {
     }
 }
 
-// Map Weather Codes to Styles
+// // Map Weather Codes to Styles and Particles
 function getWeatherInfo(code) {
     const timeOfDay = new Date().getHours() > 6 && new Date().getHours() < 19 ? "day" : "night";
-
+    
+    // Particle types: 'none', 'rain', 'leaves'
     const weatherCodes = {
-        0: { desc: 'Clear sky', icon: timeOfDay === 'day' ? 'fa-sun' : 'fa-moon', color: timeOfDay === 'day' ? ['#4facfe', '#00f2fe'] : ['#29323c', '#485563'] },
-        1: { desc: 'Mainly clear', icon: timeOfDay === 'day' ? 'fa-cloud-sun' : 'fa-cloud-moon', color: timeOfDay === 'day' ? ['#4facfe', '#00f2fe'] : ['#29323c', '#485563'] },
-        2: { desc: 'Partly cloudy', icon: timeOfDay === 'day' ? 'fa-cloud-sun' : 'fa-cloud-moon', color: ['#89f7fe', '#66a6ff'] },
-        3: { desc: 'Overcast', icon: 'fa-cloud', color: ['#cfd9df', '#e2ebf0'] },
-        45: { desc: 'Fog', icon: 'fa-smog', color: ['#bdc3c7', '#2c3e50'] },
-        48: { desc: 'Depositing rime fog', icon: 'fa-smog', color: ['#bdc3c7', '#2c3e50'] },
-        51: { desc: 'Light drizzle', icon: 'fa-cloud-rain', color: ['#a1c4fd', '#c2e9fb'] },
-        53: { desc: 'Moderate drizzle', icon: 'fa-cloud-rain', color: ['#89f7fe', '#66a6ff'] },
-        55: { desc: 'Dense drizzle', icon: 'fa-cloud-showers-heavy', color: ['#4facfe', '#00f2fe'] },
-        61: { desc: 'Slight rain', icon: 'fa-cloud-rain', color: ['#a1c4fd', '#c2e9fb'] },
-        63: { desc: 'Moderate rain', icon: 'fa-cloud-showers-heavy', color: ['#667eea', '#764ba2'] },
-        65: { desc: 'Heavy rain', icon: 'fa-cloud-showers-water', color: ['#667eea', '#764ba2'] },
-        71: { desc: 'Slight snow fall', icon: 'fa-snowflake', color: ['#e0c3fc', '#8ec5fc'] },
-        73: { desc: 'Moderate snow fall', icon: 'fa-snowflake', color: ['#c2e9fb', '#a1c4fd'] },
-        75: { desc: 'Heavy snow fall', icon: 'fa-snowflake', color: ['#89f7fe', '#66a6ff'] },
-        77: { desc: 'Snow grains', icon: 'fa-snowflake', color: ['#e0c3fc', '#8ec5fc'] },
-        80: { desc: 'Slight rain showers', icon: 'fa-cloud-rain', color: ['#8fd3f4', '#84fab0'] },
-        81: { desc: 'Moderate rain showers', icon: 'fa-cloud-showers-heavy', color: ['#43e97b', '#38f9d7'] },
-        82: { desc: 'Violent rain showers', icon: 'fa-cloud-showers-heavy', color: ['#0ba360', '#3cba92'] },
-        95: { desc: 'Thunderstorm', icon: 'fa-cloud-bolt', color: ['#30cfd0', '#330867'] },
-        96: { desc: 'Thunderstorm with slight hail', icon: 'fa-cloud-bolt', color: ['#30cfd0', '#330867'] },
-        99: { desc: 'Thunderstorm with heavy hail', icon: 'fa-cloud-bolt', color: ['#16222a', '#3a6073'] }
+        0: { desc: 'Clear sky', icon: timeOfDay === 'day' ? 'fa-sun' : 'fa-moon', color: timeOfDay === 'day' ? ['#4facfe', '#00f2fe'] : ['#29323c', '#485563'], particles: 'none' },
+        1: { desc: 'Mainly clear', icon: timeOfDay === 'day' ? 'fa-cloud-sun' : 'fa-cloud-moon', color: timeOfDay === 'day' ? ['#4facfe', '#00f2fe'] : ['#29323c', '#485563'], particles: 'none' },
+        2: { desc: 'Partly cloudy', icon: timeOfDay === 'day' ? 'fa-cloud-sun' : 'fa-cloud-moon', color: ['#89f7fe', '#66a6ff'], particles: 'none' },
+        3: { desc: 'Overcast', icon: 'fa-cloud', color: ['#cfd9df', '#e2ebf0'], particles: 'none' },
+        45: { desc: 'Fog', icon: 'fa-smog', color: ['#bdc3c7', '#2c3e50'], particles: 'none' },
+        48: { desc: 'Depositing rime fog', icon: 'fa-smog', color: ['#bdc3c7', '#2c3e50'], particles: 'none' },
+        51: { desc: 'Light drizzle', icon: 'fa-cloud-rain', color: ['#a1c4fd', '#c2e9fb'], particles: 'rain' },
+        53: { desc: 'Moderate drizzle', icon: 'fa-cloud-rain', color: ['#89f7fe', '#66a6ff'], particles: 'rain' },
+        55: { desc: 'Dense drizzle', icon: 'fa-cloud-showers-heavy', color: ['#4facfe', '#00f2fe'], particles: 'rain' },
+        61: { desc: 'Slight rain', icon: 'fa-cloud-rain', color: ['#a1c4fd', '#c2e9fb'], particles: 'rain' },
+        63: { desc: 'Moderate rain', icon: 'fa-cloud-showers-heavy', color: ['#667eea', '#764ba2'], particles: 'rain' },
+        65: { desc: 'Heavy rain', icon: 'fa-cloud-showers-water', color: ['#667eea', '#764ba2'], particles: 'rain' },
+        71: { desc: 'Slight snow fall', icon: 'fa-snowflake', color: ['#e0c3fc', '#8ec5fc'], particles: 'none' },
+        73: { desc: 'Moderate snow fall', icon: 'fa-snowflake', color: ['#c2e9fb', '#a1c4fd'], particles: 'none' },
+        75: { desc: 'Heavy snow fall', icon: 'fa-snowflake', color: ['#89f7fe', '#66a6ff'], particles: 'none' },
+        77: { desc: 'Snow grains', icon: 'fa-snowflake', color: ['#e0c3fc', '#8ec5fc'], particles: 'none' },
+        80: { desc: 'Slight rain showers', icon: 'fa-cloud-rain', color: ['#8fd3f4', '#84fab0'], particles: 'rain' },
+        81: { desc: 'Moderate rain showers', icon: 'fa-cloud-showers-heavy', color: ['#43e97b', '#38f9d7'], particles: 'rain' },
+        82: { desc: 'Violent rain showers', icon: 'fa-cloud-showers-heavy', color: ['#0ba360', '#3cba92'], particles: 'rain' },
+        95: { desc: 'Thunderstorm', icon: 'fa-cloud-bolt', color: ['#30cfd0', '#330867'], particles: 'rain' },
+        96: { desc: 'Thunderstorm with slight hail', icon: 'fa-cloud-bolt', color: ['#30cfd0', '#330867'], particles: 'rain' },
+        99: { desc: 'Thunderstorm with heavy hail', icon: 'fa-cloud-bolt', color: ['#16222a', '#3a6073'], particles: 'rain' }
     };
+    
+    // Add leaf particles for specific autumn contexts (e.g., cloudy/windy days)
+    let info = weatherCodes[code] || { desc: 'Unknown', icon: 'fa-cloud', color: ['#a8edea', '#fed6e3'], particles: 'none' };
+    if (info.particles === 'none' && (code === 3 || code === 2)) {
+        info.particles = 'leaves';
+    }
+    
+    return info;
+}
 
-    return weatherCodes[code] || { desc: 'Unknown', icon: 'fa-cloud', color: ['#a8edea', '#fed6e3'] };
+// Particle System
+let particleInterval;
+function createParticles(type) {
+    const container = document.getElementById('particles-container');
+    container.innerHTML = '';
+    clearInterval(particleInterval);
+    
+    if (type === 'none') return;
+    
+    particleInterval = setInterval(() => {
+        const particle = document.createElement('div');
+        particle.className = `particle ${type === 'rain' ? 'rain-drop' : 'leaf'}`;
+        particle.style.left = Math.random() * 100 + 'vw';
+        particle.style.animationDuration = (Math.random() * 2 + (type === 'rain' ? 0.5 : 3)) + 's';
+        particle.style.opacity = Math.random();
+        
+        container.appendChild(particle);
+        
+        // Remove particle after animation
+        setTimeout(() => {
+            particle.remove();
+        }, 6000);
+    }, type === 'rain' ? 50 : 300);
 }
 
 // Update DOM
 function updateWeatherUI(current, city, country) {
     locationNameEl.textContent = `${city}, ${country}`;
-
+    
     const now = new Date();
     const options = { weekday: 'long', day: 'numeric', month: 'short' };
     currentDateEl.textContent = now.toLocaleDateString('en-US', options);
-
+    
     tempValueEl.textContent = Math.round(current.temperature_2m);
     windSpeedEl.textContent = `${current.wind_speed_10m} km/h`;
     humidityEl.textContent = `${current.relative_humidity_2m}%`;
     feelsLikeEl.textContent = `${Math.round(current.apparent_temperature)}°C`;
-
+    
     const weatherInfo = getWeatherInfo(current.weather_code);
-
+    
     weatherDescEl.textContent = weatherInfo.desc;
     weatherIconEl.innerHTML = `<i class="fa-solid ${weatherInfo.icon}"></i>`;
-
+    
+    // Apply particles
+    createParticles(weatherInfo.particles);
+    
     // Apply weather colorful theme to the icon
     weatherIconEl.style.setProperty('--icon-start', weatherInfo.color[0]);
     weatherIconEl.style.setProperty('--icon-end', weatherInfo.color[1]);
-
+    
     weatherCard.classList.remove('hidden');
     setTimeout(() => {
         weatherCard.classList.add('show');
