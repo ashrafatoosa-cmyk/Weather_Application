@@ -264,5 +264,6 @@ function hideError() {
 document.addEventListener('DOMContentLoaded', () => {
     initSlider();
     fetchCountries();
+    createParticles('leaves'); // Start with appealing default
     weatherCard.classList.add('hidden');
 });
