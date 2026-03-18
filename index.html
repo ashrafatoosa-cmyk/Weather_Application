@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A beautiful and simple weather application">
+    <title>Aurora Weather</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- FontAwesome for weather icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1 class="app-title">Aurora Weather</h1>
+        </header>
+        
+        <main>
+            <div class="search-section">
+                <div class="search-controls">
+                    <div class="search-box">
+                        <i class="fa-solid fa-globe search-icon"></i>
+                        <input type="text" id="country-search" placeholder="Country..." autocomplete="off">
+                    </div>
+                    <div class="search-box">
+                        <i class="fa-solid fa-city search-icon"></i>
+                        <input type="text" id="city-search" placeholder="City..." autocomplete="off">
+                    </div>
+                </div>
+                <!-- Autocomplete suggestions container -->
+                <ul id="search-results" class="suggestions-list hidden"></ul>
+            </div>
+
+            <div id="weather-card" class="weather-card glass hidden">
+                <div class="weather-header">
+                    <h2 id="location-name">City, Country</h2>
+                    <p id="current-date">Monday, 1 Jan</p>
+                </div>
+                
+                <div class="weather-main">
+                    <div class="weather-icon-large" id="weather-icon">
+                        <i class="fa-solid fa-cloud-sun"></i>
+                    </div>
+                    <div class="temperature">
+                        <span id="temp-value">--</span>°C
+                    </div>
+                    <div class="weather-description" id="weather-desc">Description</div>
+                </div>
+                
+                <div class="weather-details">
+                    <div class="detail-box">
+                        <i class="fa-solid fa-wind"></i>
+                        <span id="wind-speed">-- km/h</span>
+                        <label>Wind</label>
+                    </div>
+                    <div class="detail-box">
+                        <i class="fa-solid fa-droplet"></i>
+                        <span id="humidity">--%</span>
+                        <label>Humidity</label>
+                    </div>
+                    <div class="detail-box">
+                        <i class="fa-solid fa-temperature-half"></i>
+                        <span id="feels-like">--°C</span>
+                        <label>Feels Like</label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="loading" class="loading-spinner hidden">
+                <div class="spinner"></div>
+            </div>
+            
+            <div id="error-message" class="error-message hidden">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <p id="error-text">Failed to fetch weather data.</p>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
